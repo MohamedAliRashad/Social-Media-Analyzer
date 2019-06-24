@@ -1,0 +1,6 @@
+graph g{
+A->B
+label ="Graph";
+labelloc = top;
+labeljust = left;
+}
