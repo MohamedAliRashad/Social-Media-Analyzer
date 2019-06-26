@@ -28,17 +28,7 @@ namespace Graph_Visualization
         private void Button1_Click(object sender, EventArgs e)
         {
             string graphVizString;
-            /*
-            graphVizString = @"digraph G {";
-            graphVizString += "{";
-            graphVizString += "node[margin = 0 fontcolor = blue]";
-            graphVizString += "b[fixedsize=true width=1.5 height=1.5]";
-            graphVizString += "d[fixedsize=true width=3 height=3]";
-            graphVizString += "}";
-            graphVizString += "a-> { c d}";
-            graphVizString += "b-> { c d}";
-            graphVizString += "}";
-            */
+
 
             string adj_mat_string = System.IO.File.ReadAllText(@Adj_mat_file_path);
             string centrality_string = Process_Comm.Run(algorithms_dir+algorithm_name, adj_mat_string);
