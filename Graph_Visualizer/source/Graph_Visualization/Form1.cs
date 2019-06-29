@@ -13,14 +13,13 @@ namespace Graph_Visualization
 {
     public partial class Form1 : Form
     {
-        string Adj_mat_file_path, algorithms_dir, algorithm_name;
+        string Adj_mat_file_path, algorithms_dir;
 
         public Form1()
         {
             InitializeComponent();
             algorithms_dir = @"./centerality_algorithms/";
             Adj_mat_file_path = @"./example_adjacency_matrix.txt";
-            algorithm_name = "Degree_Centrality.exe";
         }
 
 
@@ -30,12 +29,26 @@ namespace Graph_Visualization
             string graphVizString;
 
 
-            string adj_mat_string = System.IO.File.ReadAllText(@Adj_mat_file_path);
-            string centrality_string = Process_Comm.Run(algorithms_dir+algorithm_name, adj_mat_string);
+            string adj_mat_string = File.ReadAllText(@Adj_mat_file_path);
+            string centrality_string, algorithm_name;
+
+            if (closeness_centrality.Checked)
+                algorithm_name = "Closeness_Centrality.exe";
+            else if (betweenness_centrality.Checked)
+                algorithm_name = "Betweenness_Centrality.exe";
+            else
+                algorithm_name = "Degree_Centrality.exe";
+
+            centrality_string = Process_Comm.Run(algorithms_dir + algorithm_name, adj_mat_string);
 
             graphVizString = FileDotEngine.Convert_to_dot(adj_mat_string, centrality_string);
             Bitmap bm = FileDotEngine.Run(graphVizString);
             graph.Image = bm;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
 
         private void Debug_Click(object sender, EventArgs e)

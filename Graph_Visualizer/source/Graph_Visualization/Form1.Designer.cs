@@ -125,6 +125,7 @@
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Graph Visualizer";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.graph)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

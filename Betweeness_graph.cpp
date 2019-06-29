@@ -133,10 +133,14 @@ int main(void)
     }
     f1 >> NumVer >> NumEdg;
 
+	//rows represent nodes, columns are shortest distance from
+	//the row's node to the column's node
+	//(eg. [0][1] shortest distance between node 0 and 1
     vector<vector<int>> Distance(NumVer, vector<int>(NumVer, INF));
 
     for (int i = 0; i < NumVer; i++)
     {
+		//shortest between a node and it self is zero
         Distance[i][i] = 0;
     }
 
@@ -150,6 +154,8 @@ int main(void)
             Distance[node1][node2] = Distance[node2][node1] = edge;
     }
 
+	//container to store shortest paths
+	//eg([0][1] stores shortest path from node 0 to 1)
     vector<vector<vector<int>>> Sequence(NumVer, vector<vector<int>>(NumVer, vector<int>(1, INF)));
 
     for (int i = 0; i < NumVer; i++)
@@ -181,7 +187,7 @@ int main(void)
                     vector<int> x;
                     Distance[i][j] = Distance[j][i] = Distance[i][k] + Distance[k][j];
                     x.push_back(k);
-                    Sequence[i][j] = Sequence[i][j] = x;
+                    Sequence[i][j] = Sequence[j][i] = x;
                 }
             }
         }
