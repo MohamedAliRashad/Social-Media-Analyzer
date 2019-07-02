@@ -4,7 +4,8 @@
 #include <queue>
 #include <fstream>
 #include <string>
-#include <set> 
+#include <algorithm> 
+#include <set>
 
 #define INF 99999
 
@@ -23,24 +24,42 @@ float Betweenness(vector<vector<int>> S, int V)
         {
             if (S[i][j] == V && V != i)
             {
-                // cout << V << endl;
-                if (S[S[i][j]].size() > 1){
-                    x.insert(S[i].begin(), S[i].end());
-                    cout << "Here" << endl;
-                    return 1 / (float) x.size();
-                }
-                    Result += 1 / (float)S[i].size() + Betweenness(S, i);
-                // if (0)
-                // {
-                //     Result += 1 / (float)S[i].size() + (1 / (float)S[i].size()) * Betweenness(S, i);
-                // }
-                // else
-                // {
-                // }
+                cout << i << endl;
+                Result += 1 / (float)S[i].size() + Betweenness(S, i);
             }
         }
     }
     return Result;
+}
+
+set<vector<int>> paths(vector<vector<int>> S, int node){
+    set<vector<int>> p;
+    for (int i = 0; i < S.size(); i++){
+        if (S[i][0] == INF)
+            continue;
+        if (S[i][0] == i){
+            vector<int> x;
+            x.push_back(node);
+            x.push_back(i);
+            p.insert(x);
+        }
+    }
+    for (int i = 0; i < S.size(); i++){
+        if (S[i][0] == INF || S[i][0] == i)
+            continue;
+        for (int j = 0; j < S[i].size(); j++){
+            set<vector<int>>::iterator it = p.begin();
+            while (it != p.end()){
+                if((*it).back() == S[i][j]){
+                    vector<int> y = (*it);
+                    y.push_back(i);
+                    p.insert(y);
+                }
+                it++;
+            }
+        }
+    }
+    return p;
 }
 
 void printMatrix(vector<vector<int>> G)
@@ -99,25 +118,15 @@ void printPath(vector<vector<vector<int>>> p, vector<vector<int>> S)
     }
 }
 
-void printPath(vector<vector<vector<vector<int>>>> p, vector<vector<int>> S)
+void printPath(set<vector<int>> p)
 {
-    int N = S.size();
-    for (int i = 0; i < N; i++)
+    for (auto path: p)
     {
-        for (int j = i + 1; j < N; j++)
+        for (auto elem: path)
         {
-            if (S[i][j] == INF || i == j)
-                continue;
-            for (int m = 0; m < p[i][j].size(); m++)
-            {
-                cout << i << " -> ";
-                for (int k = 0; k < p[i][j][m].size(); k++)
-                {
-                    cout << p[i][j][m][k] << " -> ";
-                }
-                cout << j << endl;
-            }
+            cout << elem << " -> ";
         }
+        cout << "\b\b\b\b    " << endl;
     }
 }
 
@@ -162,6 +171,7 @@ int main(void)
         }
     }
 
+    vector<vector<int>> Adj = Distance;
     // printMatrix(Distance);
 
     for (int k = 0; k < NumVer; k++)
@@ -170,7 +180,7 @@ int main(void)
         {
             for (int j = i + 1; j < NumVer; j++)
             {
-                if (Distance[i][k] + Distance[k][j] == Distance[i][j] && i != j && i != k && j != k)
+                if (Distance[i][k] + Distance[k][j] == Distance[i][j] && i != j && i != k && j != k && Adj[k][j] != INF)
                 {
                     Sequence[i][j].push_back(k);
                     // Sequence[j][i] = Sequence[i][j];
@@ -186,7 +196,26 @@ int main(void)
             }
         }
     }
-    
+
+    // for (int i = 0; i < NumVer; i++){
+    //     for (int j = i + 1; j < NumVer; j++){
+    //         if (Sequence[j][i].size() > 1)
+    //             continue;
+    //         if (Sequence[i][j][0] == j)
+    //             Sequence[j][i][0] = i;
+    //         else
+    //         {
+    //             Sequence[j][i] = Sequence[i][j];
+    //         }   
+    //     }
+    // }
+    // set<vector<int>> path = paths(Sequence[0], 0);
+    // for (set<vector<int>>::iterator it = path.begin(); it != path.end(); it++){
+    //     if ((*it).size() <= 2){
+    //         path.erase(it);
+    //     }
+    // }
+    // printPath(path);
     // vector<vector<int>> S = Sequence[0];
     // for (int x = 0; x < NumVer; x++){
     //     if (S[x][0] == INF || S[x][0] == x)
@@ -204,19 +233,50 @@ int main(void)
     //     }
     // }
     // printMatrix(Sequence);
-    // printMatrix(S);
+    // printMatrix(Distance);
 
+    // printPath(paths(Sequence[0], 0));
+    // for (int i = 0; i < NumVer; i++){
+    //     for (int j = i + 1; j < NumVer; j++){
+    //         for (int k = 0; k < Sequence[i][j].size(); k++){
+    //             int m = Sequence[i][j][k];
+    //             // cout << j << endl;
+    //             if (m == j || Sequence[i][m][0] == m || Sequence[i][m][0] == INF)
+    //                 continue;
+    //             Sequence[i][j].erase(remove(Sequence[i][j].begin(), Sequence[i][j].end(), m));
+    //             Sequence[i][j].insert(Sequence[i][j].begin(), Sequence[i][m].begin(), Sequence[i][m].end());
+    //         }
+    //     }
+    // }
     // printMatrix(Sequence);
+    // printPath(Sequence, Distance);
 
+    vector<float> Result(NumVer);
     for (int i = 0; i < NumVer; i++)
     {
-        float Result = 0;
-        for (int j = 0; j < NumVer; j++)
-        {
-            Result += Betweenness(Sequence[j], i);
+        set<vector<int>> x = paths(Sequence[i], i);
+        for (set<vector<int>>::iterator it = x.begin(); it != x.end(); it++){
+            if ((*it).size() <= 2){
+                x.erase(it);
+            }
         }
-        cout << Result << endl;
+        for (auto z: x){
+            vector<int>::iterator it = find(z.begin() + 1, z.end() - 1, )
+        }
     }
+
+    for (auto r: Result){
+        cout << r << endl;
+    }
+
+    // for (int i = 0; i < NumVer; i++)
+    // {
+    //     float Result = 0;
+    //     for (int j = 0; j < NumVer; j++){
+    //         Result += Betweenness(Sequence[j], i);
+    //     }
+    //     cout << Result << endl;
+    // }
     f1.close();
     return 0;
 }
