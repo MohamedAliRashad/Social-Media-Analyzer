@@ -5,3 +5,6 @@
 !.vscode/extensions.json
 Betweenness_centrality
 Betweeness_graph
+Graph_Visualizer/source/Graph_Visualization/bin/*
+Graph_Visualizer/source/Graph_Visualization/obj/*
+Graph_Visualizer/source/.vs/*

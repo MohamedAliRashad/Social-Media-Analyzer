@@ -89,6 +89,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="centerality_algorithms\Betweenness_Centrality.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="centerality_algorithms\Closeness_Centrality.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="centerality_algorithms\Degree_Centrality.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
